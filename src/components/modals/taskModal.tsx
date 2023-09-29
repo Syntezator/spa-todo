@@ -11,7 +11,7 @@ export const TaskModal: FC<TaskModalProps> = ({ closeModal }) => {
         <div className='taskModal'>
           
           <div className='title'>Задача 2 <span className='id'>#2</span></div>
-          <div className='description'>Описание задачи</div>
+          <textarea className='description' placeholder='Описание задачи'></textarea>
           <div className='details'>
             <div className='timeStart'>Дата создания <strong>18:30 26.09.2023</strong></div>
             <div className='timeInProgress'>Время в работе <strong>18:30 26.09.2023</strong></div>
@@ -19,11 +19,18 @@ export const TaskModal: FC<TaskModalProps> = ({ closeModal }) => {
             <div className='pryority'>Приоритет <strong>Высокий</strong></div>
             <div className='status'>Текущий статус <strong>Впроцессе</strong></div>           
           </div>
-          <div className='d-flex'>
-            <div className='files'><button>Добавить файл</button></div>
-            <div className='subtasks'><button>Добавить подзадачу</button></div>
+          <div className='row align-items-center'>
+            <div className='col-6'>
+              <div className='files'>Choose a file or drag here</div>
+            </div>
+            <div className='col-6 text-right'>
+              <div className='subtasks'><button>Добавить подзадачу</button></div>
+            </div>
           </div>
-          <div className='comments'> Комментарии</div>
+          <div>
+            <textarea className='comments'placeholder='Комментарии'> </textarea>
+          </div>
+          
         </div>
       </div>
       

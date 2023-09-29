@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { TaskModal } from './taskModal';
+import { TaskModal } from './modals/taskModal';
 
 interface Task {
   id: number;

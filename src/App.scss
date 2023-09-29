@@ -58,6 +58,12 @@ a{
 .justify-content-center{
   justify-content: center;
 }
+.align-items-center{
+  align-items: center;
+}
+.text-right{
+  text-align: right;
+}
 .col-12{
   width: 100%;
   position: relative;
@@ -124,6 +130,9 @@ li{
     height: 75px;
     border-radius: 3px;
     margin: 15px 0;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
   }
   .comments{
     font-weight: normal;
@@ -133,6 +142,9 @@ li{
     height: 75px;
     border-radius: 3px;
     margin: 10px 0;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
   }
   .details{
     font-size: 14px;
@@ -161,9 +173,9 @@ li{
 .projects{
   border:1px solid #dfdfdf;
   max-width: 800px;
-  margin: 35px auto;
+  margin: 35px auto 15px;
   border-radius: 3px;
-
+  min-height: 50vh;
 }
 .project{
   display: flex;
@@ -182,13 +194,13 @@ li{
 button{
   border-radius: 3px;
   background: $colorLight;
-  border: 0;
+  border: 1px solid $colorLight;
   padding: 5px 15px;
   cursor: pointer;
 }
 button:hover{
   background: $colorDark;
-  color: white;
+  color: $colorLight;
 }
 .modal{
   position: fixed;
@@ -207,4 +219,36 @@ button:hover{
     border-radius: 10px;
     padding: 1.5rem;
   }
+}
+.files{
+  background: #f6f8fa;
+  border: 1px solid #dfdfdf;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+form{
+  display: flex;
+  flex-direction: column;
+  min-width: 215px;
+
+  input{
+    padding: 8px;
+    border-radius: 3px;
+    box-shadow: none;
+    border: 1px solid gray;
+    margin-bottom: 10px;
+  }
+  select{
+    padding: 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
+}
+.btn-large{
+  width: 100%;
+  padding: 10px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
 }
