@@ -6,11 +6,15 @@ import { FC } from 'react';
 import { Projects } from './components/projects';
 import { Tasks } from './components/tasks';
 import { TaskCreateModal } from './components/modals/taskCreateModal';
+import { Modal } from './components/modals/modal';
+import { ProjectModal} from './components/modals/projectModal';
 
 const App: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
 
   const openModal = () => {
+
     setIsModalOpen(true);
   };
 
@@ -24,7 +28,7 @@ const App: FC = () => {
         <div className='container'>
           <div className='row'>
             <img src={logo} className="App-logo" alt="logo" /> 
-            <button onClick={openModal}>Добавить задачу</button>  
+            
           </div>
         </div>   
       </header>
@@ -32,13 +36,13 @@ const App: FC = () => {
           <div className="container">
             <BrowserRouter>
               <Routes> 
-                <Route path='/' element={<Projects/>} />
-                <Route path='tasks' element={<Tasks/>} />
+                <Route path='/' element={<Projects setModalContent={setModalContent} openModal={openModal} />} />
+                <Route path='tasks' element={<Tasks setModalContent={setModalContent} openModal={openModal} closeModal={closeModal}/>} />
               </Routes>
             </BrowserRouter>
           </div>
       </div>
-      {isModalOpen && <TaskCreateModal closeModal={closeModal} />}
+      {isModalOpen && <Modal closeModal={closeModal} content={modalContent} />}
     </div>
   );
 }

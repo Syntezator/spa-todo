@@ -9,17 +9,18 @@ interface Project {
 }
 
 interface ProjectsProps {
-  // Здесь вы можете определить свойства (props) компонента
+  openModal: () => void;
+  setModalContent: React.Dispatch<React.SetStateAction<React.ReactNode | null>>;
 }
 
-export const Projects: FC<ProjectsProps> = (props) => {
+export const Projects: FC<ProjectsProps> = ({ openModal, setModalContent }: ProjectsProps) => {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
     (async () => {
       try {
         const response = await projectAPI.getAll();
-        setProjects(response.data); // Обновление состояния projects
+        setProjects(response.data); 
       } catch (error) {
         console.error('error');
       }
@@ -35,14 +36,10 @@ export const Projects: FC<ProjectsProps> = (props) => {
       console.error('error');
     }
   };
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+  
+  const handleOpenModal = () => {
+    openModal();
+    setModalContent(<ProjectModal/>);
   };
 
   return (
@@ -56,11 +53,10 @@ export const Projects: FC<ProjectsProps> = (props) => {
                 <button onClick={() => handleDelete(project.id)}>Удалить</button>
               </div>
             ))}
-          
         </div>
-        <button className='btn-large' onClick={openModal}>Создать проект</button>
+        <button className='btn-large' onClick={handleOpenModal}>Создать проект</button>
       </div>
-      {isModalOpen && <ProjectModal closeModal={closeModal} />}
+      
     </div>
   );
 };
