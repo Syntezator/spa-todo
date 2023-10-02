@@ -33,11 +33,11 @@ interface addComment {
 }
 
 type TaskModalProps = {
-  taskId:number
+  task:Task
 };
 
-export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
-  const [task, setTask] = useState<Task | null>(null);
+export const TaskModal: FC<TaskModalProps> = ({task}) => {
+  
   const [commentTitle, setCommentTitle] = useState('');
   const dispatch = useDispatch();
   const comments = useSelector((state: RootState) => state.commentReducer.comments) || [];
@@ -45,7 +45,7 @@ export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
   useEffect(() => {
     (async () => {
       try {      
-        const response = await commentsAPI.getAll(taskId);
+        const response = await commentsAPI.getAll(task.id);
         dispatch(setComments(response.data)); 
       } catch (error) {
         console.error('error');
@@ -53,25 +53,24 @@ export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
     })();
   }, []);
   
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await taskAPI.getById(taskId);
-        setTask(response.data); 
-      } catch (error) {
-        console.error('error');
-      }
-    })();
-  }, []);
-
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const response = await taskAPI.getById(taskId);
+  //       setTask(response.data); 
+  //     } catch (error) {
+  //       console.error('error');
+  //     }
+  //   })();
+  // }, []);
+  const taskId= task.id;
   const addComment = () => {
-      commentsAPI.create({commentTitle, taskId}).then(response => {
-        dispatch(addComments(response.data));
-      });    
+    commentsAPI.create({commentTitle, taskId}).then(response => {
+      dispatch(addComments(response.data));
+    });    
   }
 
   return (
-        
         <div className='taskModal'>
           {task ? (
             <div>
@@ -79,8 +78,8 @@ export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
                 <textarea className='description' placeholder='Описание задачи'>{task.description}</textarea>
                 <div className='details'>
                   <div className='timeStart'>Дата создания <strong>{task.start}</strong></div>
-                  <div className='timeInProgress'>Время в работе <strong>18:30 26.09.2023</strong></div>
-                  <div className='timeEnd'>Дата окончания <strong>18:30 26.09.2023</strong></div>
+                  <div className='timeInProgress'>Время в работе <strong>--</strong></div>
+                  <div className='timeEnd'>Дата окончания <strong>--</strong></div>
                   <div className='pryority'>Приоритет <strong>{task.priority}</strong></div>
                   <div className='status'>Текущий статус <strong>{task.status}</strong></div>           
                 </div>

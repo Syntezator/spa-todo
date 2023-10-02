@@ -13,8 +13,15 @@ interface Tasks {
   number:number;
   title: string;
   description: string;
-  projectId:string | undefined;
-  taskId:number;
+  start:string;
+  timeInProgress:string;
+  timeEnd:string;
+  priority:string;
+  status:string;
+  files:object;
+  subtasks:object;
+  comments:object;
+  projectId:number;
 }
 
 interface TasksProps {
@@ -44,19 +51,7 @@ export const Tasks: FC<TasksProps> = ({ openModal, closeModal, setModalContent}:
     setModalContent(<TaskCreateModal projectId={projectId} closeModal={closeModal}/>);
   };
 
-  const handleTaskModal = (taskId:number) => {
-    openModal();
-    setModalContent(<TaskModal taskId={taskId}/>);
-  };
-
-  const handleDelete = async (taskId: number) => {
-    try {
-      await taskAPI.delete(taskId);
-      dispatch(deleteTask(taskId));
-    } catch (error) {
-      console.error('error');
-    }
-  };
+  
   return (
     <div className="row justify-content-center">
       <div className='col-12'>
@@ -70,11 +65,7 @@ export const Tasks: FC<TasksProps> = ({ openModal, closeModal, setModalContent}:
           </div>
           
           {tasks.map((task: Tasks) => (
-              <div key={task.id} className='task'>
-                <div className='title'>{task.title}<span className='id'>{task.number}</span></div>
-                <a href="#" onClick={() => handleTaskModal(task.id)}className='description'>{task.description}</a> 
-                <p className='delete' onClick={() => handleDelete(task.id)}>Удалить</p>
-            </div>
+            <Task setModalContent={setModalContent} openModal={openModal} task={task} />
           ))}
           
         </div>
