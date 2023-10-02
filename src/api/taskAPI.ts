@@ -1,20 +1,20 @@
 import API from "./api";
 
 export const taskAPI = {
-  getAll: () => {
-    return API.get('/tasks')
+  getAll: (projectId:string | undefined) => {
+    return API.get(`/tasks/${projectId}`)
   },
   getById: (taskId: number) => {
     return API.get(`/task/${taskId}`)
   },
   create: (data:{
-    number: string, 
+    number: number, 
     title:string, 
     description: string,    
     status:string, 
-    pryority:string, 
+    priority:string, 
     task:string, 
-    projectId:string
+    projectId:string | undefined
   }) => {
     return API.post('/task/add', data)
   },

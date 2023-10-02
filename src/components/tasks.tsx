@@ -3,12 +3,18 @@ import { Task } from './task';
 import { taskAPI } from '../api/taskAPI';
 import { TaskModal } from './modals/taskModal';
 import { TaskCreateModal } from './modals/taskCreateModal';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {RootState} from "../store/reducers";
+import { deleteTask, setTasks } from '../store/actions';
 
 interface Tasks {
   id: number;
   number:number;
   title: string;
   description: string;
+  projectId:string | undefined;
+  taskId:number;
 }
 
 interface TasksProps {
@@ -17,14 +23,16 @@ interface TasksProps {
   setModalContent: React.Dispatch<React.SetStateAction<React.ReactNode | null>>;
 }
 
-export const Tasks: FC<TasksProps> = ({ openModal, closeModal, setModalContent }: TasksProps) => {
-  const [tasks, setTasks] = useState([]);
+export const Tasks: FC<TasksProps> = ({ openModal, closeModal, setModalContent}: TasksProps) => {
+  const {projectId} = useParams(); 
+  const dispatch = useDispatch();
+  const tasks = useSelector((state: RootState) => state.taskReducer.tasks) || [];
 
   useEffect(() => {
     (async () => {
       try {
-        const response = await taskAPI.getAll();
-        setTasks(response.data); 
+        const response = await taskAPI.getAll(projectId);
+        dispatch(setTasks(response.data)); 
       } catch (error) {
         console.error('error');
       }
@@ -33,7 +41,7 @@ export const Tasks: FC<TasksProps> = ({ openModal, closeModal, setModalContent }
 
   const handleTaskCreateModal = () => {
     openModal();
-    setModalContent(<TaskCreateModal  closeModal={closeModal}/>);
+    setModalContent(<TaskCreateModal projectId={projectId} closeModal={closeModal}/>);
   };
 
   const handleTaskModal = (taskId:number) => {
@@ -44,13 +52,11 @@ export const Tasks: FC<TasksProps> = ({ openModal, closeModal, setModalContent }
   const handleDelete = async (taskId: number) => {
     try {
       await taskAPI.delete(taskId);
-      const response = await taskAPI.getAll();
-      setTasks(response.data);
+      dispatch(deleteTask(taskId));
     } catch (error) {
       console.error('error');
     }
   };
-
   return (
     <div className="row justify-content-center">
       <div className='col-12'>
@@ -62,6 +68,7 @@ export const Tasks: FC<TasksProps> = ({ openModal, closeModal, setModalContent }
             <h4>Queue</h4>
             <p>This item hasn't been started</p>
           </div>
+          
           {tasks.map((task: Tasks) => (
               <div key={task.id} className='task'>
                 <div className='title'>{task.title}<span className='id'>{task.number}</span></div>

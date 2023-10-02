@@ -48,7 +48,7 @@ export const Projects: FC<ProjectsProps> = ({ openModal, setModalContent }: Proj
         <div className='projects'>
             {projects.map((project: Project) => (
               <div key={project.id} className="project">
-                <a href="/tasks">{project.title}</a>
+                <a href={`/tasks/${project.id}`}>{project.title}</a>
                 <span>{project.description}</span>
                 <button onClick={() => handleDelete(project.id)}>Удалить</button>
               </div>

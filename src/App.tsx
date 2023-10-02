@@ -37,7 +37,7 @@ const App: FC = () => {
             <BrowserRouter>
               <Routes> 
                 <Route path='/' element={<Projects setModalContent={setModalContent} openModal={openModal} />} />
-                <Route path='tasks' element={<Tasks setModalContent={setModalContent} openModal={openModal} closeModal={closeModal}/>} />
+                <Route path='/tasks/:projectId' element={<Tasks setModalContent={setModalContent} openModal={openModal} closeModal={closeModal}/>} />
               </Routes>
             </BrowserRouter>
           </div>

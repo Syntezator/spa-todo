@@ -1,5 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { taskAPI } from '../../api/taskAPI';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { addComments, setComments } from '../../store/actions';
+import {RootState} from "../../store/reducers";
+import { commentsAPI } from '../../api/commentsAPI';
 
 interface Task {
   id: number;
@@ -9,11 +14,22 @@ interface Task {
   start:string;
   timeInProgress:string;
   timeEnd:string;
-  pryority:string;
+  priority:string;
   status:string;
   files:object;
   subtasks:object;
   comments:object;
+  projectId:number;
+}
+
+interface Comment {
+  title: string;
+  taskId:number
+}
+
+interface addComment {
+  title: string;
+  taskId:number
 }
 
 type TaskModalProps = {
@@ -22,7 +38,21 @@ type TaskModalProps = {
 
 export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
   const [task, setTask] = useState<Task | null>(null);
+  const [commentTitle, setCommentTitle] = useState('');
+  const dispatch = useDispatch();
+  const comments = useSelector((state: RootState) => state.commentReducer.comments) || [];
 
+  useEffect(() => {
+    (async () => {
+      try {      
+        const response = await commentsAPI.getAll(taskId);
+        dispatch(setComments(response.data)); 
+      } catch (error) {
+        console.error('error');
+      }
+    })();
+  }, []);
+  
   useEffect(() => {
     (async () => {
       try {
@@ -33,6 +63,12 @@ export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
       }
     })();
   }, []);
+
+  const addComment = () => {
+      commentsAPI.create({commentTitle, taskId}).then(response => {
+        dispatch(addComments(response.data));
+      });    
+  }
 
   return (
         
@@ -45,7 +81,7 @@ export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
                   <div className='timeStart'>Дата создания <strong>{task.start}</strong></div>
                   <div className='timeInProgress'>Время в работе <strong>18:30 26.09.2023</strong></div>
                   <div className='timeEnd'>Дата окончания <strong>18:30 26.09.2023</strong></div>
-                  <div className='pryority'>Приоритет <strong>{task.pryority}</strong></div>
+                  <div className='pryority'>Приоритет <strong>{task.priority}</strong></div>
                   <div className='status'>Текущий статус <strong>{task.status}</strong></div>           
                 </div>
                 <div className='row align-items-center'>
@@ -57,7 +93,11 @@ export const TaskModal: FC<TaskModalProps> = ({taskId}) => {
                   </div>
                 </div>
                 <div>
-                  <textarea className='comments'placeholder='Комментарии'> </textarea>
+                {comments.map((comment: Comment) => (
+                    <p>{comment.title}</p>
+                ))}
+                  <textarea className='comments'placeholder='Комментарии' value={commentTitle} onChange={(e) => {setCommentTitle(e.target.value)}}></textarea>
+                  <button onClick={addComment}>Добавить комментарий</button>
                 </div>
             </div>
           ) : (
